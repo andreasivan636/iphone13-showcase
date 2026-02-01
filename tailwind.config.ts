@@ -1,0 +1,23 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        'cinema-black': '#000000',
+        'cinema-text': '#f5f5f7',
+        'cinema-grey': '#0f0f0f',
+      },
+      fontFamily: {
+        sans: ['var(--font-outfit)'],
+      }
+    },
+  },
+  plugins: [],
+};
+export default config;
