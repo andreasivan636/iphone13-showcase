@@ -57,7 +57,7 @@ export default function SequenceScroll() {
                         setLoadProgress(Math.round((count / FRAME_COUNT) * 100));
                         resolve();
                     };
-                    img.onerror = resolve;
+                    img.onerror = () => resolve();
                 });
                 promises.push(promise);
             }
