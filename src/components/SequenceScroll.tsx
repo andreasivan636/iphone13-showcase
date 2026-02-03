@@ -2,7 +2,6 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-// TAMBAHAN: Import useSpring
 import { useScroll, useTransform, useMotionValueEvent, useSpring, motion } from 'framer-motion';
 
 const FRAME_COUNT = 192;
@@ -18,19 +17,17 @@ export default function SequenceScroll() {
         offset: ["start start", "end end"]
     });
 
-    // 🟢 RAHASIA "RINGAN" SEPERTI FORE: useSpring 🟢
-    // Ini membuat scroll tidak "kaget-kaget" tapi mengayun lembut.
+    // Gunakan Spring agar scroll terasa "mengayun" lembut
     const smoothProgress = useSpring(scrollYProgress, {
-        mass: 0.1,      // Makin kecil = makin ringan
-        stiffness: 100, // Kekuatan per
-        damping: 20,    // Peredam getaran (biar gak goyang berlebih)
+        mass: 0.1,
+        stiffness: 100,
+        damping: 20,
         restDelta: 0.001
     });
 
-    // Hubungkan transform ke smoothProgress, bukan scrollYProgress langsung
     const currentIndex = useTransform(smoothProgress, [0, 0.9], [1, FRAME_COUNT]);
 
-    // --- ANIMASI TEKS (Tetap pakai scroll asli biar responsif) ---
+    // --- ANIMASI TEKS ---
     const t1Op = useTransform(scrollYProgress, [0, 0.1, 0.15], [1, 1, 0]);
     const t1Scale = useTransform(scrollYProgress, [0, 0.15], [1, 0.8]);
 
@@ -46,7 +43,6 @@ export default function SequenceScroll() {
     // --- EVENT GANTI GAMBAR ---
     useMotionValueEvent(currentIndex, "change", (latest) => {
         const safeIndex = Math.max(1, Math.min(Math.floor(latest), FRAME_COUNT));
-        // Kita panggil requestAnimationFrame biar browser gak stress
         requestAnimationFrame(() => {
             setCurrentImg(`/sequence/ezgif-frame-${safeIndex.toString().padStart(3, '0')}.jpg`);
         });
@@ -93,21 +89,21 @@ export default function SequenceScroll() {
             <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
                 <div className="absolute w-[600px] h-[600px] bg-blue-900/20 blur-[120px] rounded-full pointer-events-none" />
 
-                {/* 🟢 UPDATE: OPTIMASI TAG IMG 🟢 */}
                 <img
                     src={currentImg}
                     alt="iPhone Sequence"
-                    loading="eager"       // Load prioritas
-                    fetchPriority="high"  // Prioritas tinggi
-                    decoding="sync"       // Decode sinkron
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="sync"
                     className="absolute inset-0 w-full h-full object-cover z-0"
-                    style={{ willChange: "contents" }} // Memberi tahu GPU untuk bersiap
+                    style={{ willChange: "contents" }}
                 />
 
                 <div className="absolute bottom-0 right-0 w-24 h-12 bg-black z-20" />
 
                 <div className="relative z-10 w-full max-w-7xl px-6 h-full pointer-events-none flex flex-col justify-center">
 
+                    {/* JUDUL UTAMA */}
                     <motion.div style={{ opacity: t1Op, scale: t1Scale }} className="absolute inset-0 flex items-center justify-center">
                         <div className="text-center">
                             <h1 className="text-7xl md:text-9xl font-bold text-white tracking-tighter drop-shadow-2xl">iPhone 13</h1>
@@ -115,12 +111,14 @@ export default function SequenceScroll() {
                         </div>
                     </motion.div>
 
-                    <motion.div style={{ opacity: t2Op, y: t2Y }} className="absolute left-6 md:left-20 top-1/2 -translate-y-1/2 max-w-md p-6 bg-black/40 backdrop-blur-lg rounded-3xl border border-white/10">
+                    {/* 🟢 PERBAIKAN: Hapus backdrop-blur, ganti jadi bg-black/80 agar ringan 🟢 */}
+                    <motion.div style={{ opacity: t2Op, y: t2Y }} className="absolute left-6 md:left-20 top-1/2 -translate-y-1/2 max-w-md p-6 bg-black/80 rounded-3xl border border-white/10 shadow-2xl">
                         <h2 className="text-4xl font-bold text-blue-400 mb-2">Super Retina XDR</h2>
                         <p className="text-white text-lg">Layar OLED yang lebih terang, lebih tajam, dan hemat daya.</p>
                     </motion.div>
 
-                    <motion.div style={{ opacity: t3Op, y: t3Y }} className="absolute right-6 md:right-20 top-1/2 -translate-y-1/2 max-w-md p-6 bg-black/40 backdrop-blur-lg rounded-3xl border border-white/10 text-right">
+                    {/* 🟢 PERBAIKAN: Hapus backdrop-blur, ganti jadi bg-black/80 agar ringan 🟢 */}
+                    <motion.div style={{ opacity: t3Op, y: t3Y }} className="absolute right-6 md:right-20 top-1/2 -translate-y-1/2 max-w-md p-6 bg-black/80 rounded-3xl border border-white/10 text-right shadow-2xl">
                         <h2 className="text-4xl font-bold text-purple-400 mb-2">A15 Bionic</h2>
                         <p className="text-white text-lg">Chip smartphone paling ngebut di dunia.</p>
                     </motion.div>
