@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Inter } from "next/font/google"; // Atau font Outfit kamu
 import "./globals.css";
 
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "iPhone 13 | Cinematic",
-    description: "Experience the new iPhone 13.",
+    title: "iPhone 13 Showcase",
+    description: "Scrollytelling Experience",
 };
 
 export default function RootLayout({
@@ -15,8 +15,11 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className="lenis">
-            <body className={outfit.className}>{children}</body>
+        <html lang="en">
+            <body className={inter.className}>
+                {/* Pastikan tidak ada ReactLenis membungkus children ini */}
+                {children}
+            </body>
         </html>
     );
 }
