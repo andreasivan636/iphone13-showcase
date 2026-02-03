@@ -14,7 +14,6 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
-// TAMBAHAN: Import useSpring
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$scroll$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/value/use-scroll.mjs [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$transform$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/value/use-transform.mjs [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$utils$2f$use$2d$motion$2d$value$2d$event$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/utils/use-motion-value-event.mjs [app-ssr] (ecmascript)");
@@ -26,7 +25,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$mo
 ;
 const FRAME_COUNT = 192;
 function SequenceScroll() {
-    const [currentImg, setCurrentImg] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(`/sequence/ezgif-frame-001.jpg`);
+    // 🟢 UBAHAN 1: Kita hapus useState untuk gambar supaya React tidak render ulang terus
+    // const [currentImg, setCurrentImg] = useState(...); <-- INI BIANG KEROKNYA
+    // 🟢 UBAHAN 2: Kita pakai REF untuk akses langsung ke elemen HTML (Jalur Tol)
+    const imgRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
     const [isLoaded, setIsLoaded] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [loadProgress, setLoadProgress] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(0);
     const containerRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
@@ -37,15 +39,12 @@ function SequenceScroll() {
             "end end"
         ]
     });
-    // 🟢 RAHASIA "RINGAN" SEPERTI FORE: useSpring 🟢
-    // Ini membuat scroll tidak "kaget-kaget" tapi mengayun lembut.
     const smoothProgress = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$spring$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useSpring"])(scrollYProgress, {
         mass: 0.1,
         stiffness: 100,
         damping: 20,
         restDelta: 0.001
     });
-    // Hubungkan transform ke smoothProgress, bukan scrollYProgress langsung
     const currentIndex = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$transform$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useTransform"])(smoothProgress, [
         0,
         0.9
@@ -53,7 +52,7 @@ function SequenceScroll() {
         1,
         FRAME_COUNT
     ]);
-    // --- ANIMASI TEKS (Tetap pakai scroll asli biar responsif) ---
+    // --- ANIMASI TEKS ---
     const t1Op = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$transform$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useTransform"])(scrollYProgress, [
         0,
         0.1,
@@ -128,13 +127,14 @@ function SequenceScroll() {
         0.8,
         1
     ]);
-    // --- EVENT GANTI GAMBAR ---
+    // --- EVENT GANTI GAMBAR (JALUR TOL) ---
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$utils$2f$use$2d$motion$2d$value$2d$event$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMotionValueEvent"])(currentIndex, "change", (latest)=>{
         const safeIndex = Math.max(1, Math.min(Math.floor(latest), FRAME_COUNT));
-        // Kita panggil requestAnimationFrame biar browser gak stress
-        requestAnimationFrame(()=>{
-            setCurrentImg(`/sequence/ezgif-frame-${safeIndex.toString().padStart(3, '0')}.jpg`);
-        });
+        const newSrc = `/sequence/ezgif-frame-${safeIndex.toString().padStart(3, '0')}.jpg`;
+        // 🟢 UBAHAN 3: Langsung tembak ke elemen img tanpa lewat React State
+        if (imgRef.current) {
+            imgRef.current.src = newSrc;
+        }
     });
     // --- PRELOADER ---
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
@@ -171,7 +171,7 @@ function SequenceScroll() {
                         className: "w-16 h-16 border-4 border-white/20 border-t-blue-500 rounded-full animate-spin mb-4"
                     }, void 0, false, {
                         fileName: "[project]/src/components/SequenceScroll.tsx",
-                        lineNumber: 88,
+                        lineNumber: 91,
                         columnNumber: 21
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -183,13 +183,13 @@ function SequenceScroll() {
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/SequenceScroll.tsx",
-                        lineNumber: 89,
+                        lineNumber: 92,
                         columnNumber: 21
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/SequenceScroll.tsx",
-                lineNumber: 87,
+                lineNumber: 90,
                 columnNumber: 17
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -199,11 +199,12 @@ function SequenceScroll() {
                         className: "absolute w-[600px] h-[600px] bg-blue-900/20 blur-[120px] rounded-full pointer-events-none"
                     }, void 0, false, {
                         fileName: "[project]/src/components/SequenceScroll.tsx",
-                        lineNumber: 94,
+                        lineNumber: 97,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
-                        src: currentImg,
+                        ref: imgRef,
+                        src: "/sequence/ezgif-frame-001.jpg",
                         alt: "iPhone Sequence",
                         loading: "eager",
                         fetchPriority: "high",
@@ -214,14 +215,14 @@ function SequenceScroll() {
                         }
                     }, void 0, false, {
                         fileName: "[project]/src/components/SequenceScroll.tsx",
-                        lineNumber: 97,
+                        lineNumber: 100,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "absolute bottom-0 right-0 w-24 h-12 bg-black z-20"
                     }, void 0, false, {
                         fileName: "[project]/src/components/SequenceScroll.tsx",
-                        lineNumber: 107,
+                        lineNumber: 111,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -241,7 +242,7 @@ function SequenceScroll() {
                                             children: "iPhone 13"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/SequenceScroll.tsx",
-                                            lineNumber: 113,
+                                            lineNumber: 117,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -249,18 +250,18 @@ function SequenceScroll() {
                                             children: "Your new superpower."
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/SequenceScroll.tsx",
-                                            lineNumber: 114,
+                                            lineNumber: 118,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/SequenceScroll.tsx",
-                                    lineNumber: 112,
+                                    lineNumber: 116,
                                     columnNumber: 25
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/SequenceScroll.tsx",
-                                lineNumber: 111,
+                                lineNumber: 115,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -268,14 +269,14 @@ function SequenceScroll() {
                                     opacity: t2Op,
                                     y: t2Y
                                 },
-                                className: "absolute left-6 md:left-20 top-1/2 -translate-y-1/2 max-w-md p-6 bg-black/40 backdrop-blur-lg rounded-3xl border border-white/10",
+                                className: "absolute left-6 md:left-20 top-1/2 -translate-y-1/2 max-w-md p-6 bg-black/80 rounded-3xl border border-white/10 shadow-2xl",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
                                         className: "text-4xl font-bold text-blue-400 mb-2",
                                         children: "Super Retina XDR"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/SequenceScroll.tsx",
-                                        lineNumber: 119,
+                                        lineNumber: 123,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -283,13 +284,13 @@ function SequenceScroll() {
                                         children: "Layar OLED yang lebih terang, lebih tajam, dan hemat daya."
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/SequenceScroll.tsx",
-                                        lineNumber: 120,
+                                        lineNumber: 124,
                                         columnNumber: 25
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/SequenceScroll.tsx",
-                                lineNumber: 118,
+                                lineNumber: 122,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -297,14 +298,14 @@ function SequenceScroll() {
                                     opacity: t3Op,
                                     y: t3Y
                                 },
-                                className: "absolute right-6 md:right-20 top-1/2 -translate-y-1/2 max-w-md p-6 bg-black/40 backdrop-blur-lg rounded-3xl border border-white/10 text-right",
+                                className: "absolute right-6 md:right-20 top-1/2 -translate-y-1/2 max-w-md p-6 bg-black/80 rounded-3xl border border-white/10 text-right shadow-2xl",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
                                         className: "text-4xl font-bold text-purple-400 mb-2",
                                         children: "A15 Bionic"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/SequenceScroll.tsx",
-                                        lineNumber: 124,
+                                        lineNumber: 128,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -312,13 +313,13 @@ function SequenceScroll() {
                                         children: "Chip smartphone paling ngebut di dunia."
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/SequenceScroll.tsx",
-                                        lineNumber: 125,
+                                        lineNumber: 129,
                                         columnNumber: 25
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/SequenceScroll.tsx",
-                                lineNumber: 123,
+                                lineNumber: 127,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -335,7 +336,7 @@ function SequenceScroll() {
                                             children: "Cinematic Mode."
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/SequenceScroll.tsx",
-                                            lineNumber: 130,
+                                            lineNumber: 134,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -343,36 +344,36 @@ function SequenceScroll() {
                                             children: "Lihat Spesifikasi Lengkap ↓"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/SequenceScroll.tsx",
-                                            lineNumber: 131,
+                                            lineNumber: 135,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/SequenceScroll.tsx",
-                                    lineNumber: 129,
+                                    lineNumber: 133,
                                     columnNumber: 25
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/SequenceScroll.tsx",
-                                lineNumber: 128,
+                                lineNumber: 132,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/SequenceScroll.tsx",
-                        lineNumber: 109,
+                        lineNumber: 113,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/SequenceScroll.tsx",
-                lineNumber: 93,
+                lineNumber: 96,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/SequenceScroll.tsx",
-        lineNumber: 84,
+        lineNumber: 87,
         columnNumber: 9
     }, this);
 }

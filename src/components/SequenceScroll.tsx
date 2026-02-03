@@ -7,7 +7,12 @@ import { useScroll, useTransform, useMotionValueEvent, useSpring, motion } from 
 const FRAME_COUNT = 192;
 
 export default function SequenceScroll() {
-    const [currentImg, setCurrentImg] = useState(`/sequence/ezgif-frame-001.jpg`);
+    // 🟢 UBAHAN 1: Kita hapus useState untuk gambar supaya React tidak render ulang terus
+    // const [currentImg, setCurrentImg] = useState(...); <-- INI BIANG KEROKNYA
+
+    // 🟢 UBAHAN 2: Kita pakai REF untuk akses langsung ke elemen HTML (Jalur Tol)
+    const imgRef = useRef<HTMLImageElement>(null);
+
     const [isLoaded, setIsLoaded] = useState(false);
     const [loadProgress, setLoadProgress] = useState(0);
 
@@ -17,7 +22,6 @@ export default function SequenceScroll() {
         offset: ["start start", "end end"]
     });
 
-    // Gunakan Spring agar scroll terasa "mengayun" lembut
     const smoothProgress = useSpring(scrollYProgress, {
         mass: 0.1,
         stiffness: 100,
@@ -40,12 +44,15 @@ export default function SequenceScroll() {
     const t4Op = useTransform(scrollYProgress, [0.85, 0.95], [0, 1]);
     const t4Scale = useTransform(scrollYProgress, [0.85, 0.95], [0.8, 1]);
 
-    // --- EVENT GANTI GAMBAR ---
+    // --- EVENT GANTI GAMBAR (JALUR TOL) ---
     useMotionValueEvent(currentIndex, "change", (latest) => {
         const safeIndex = Math.max(1, Math.min(Math.floor(latest), FRAME_COUNT));
-        requestAnimationFrame(() => {
-            setCurrentImg(`/sequence/ezgif-frame-${safeIndex.toString().padStart(3, '0')}.jpg`);
-        });
+        const newSrc = `/sequence/ezgif-frame-${safeIndex.toString().padStart(3, '0')}.jpg`;
+
+        // 🟢 UBAHAN 3: Langsung tembak ke elemen img tanpa lewat React State
+        if (imgRef.current) {
+            imgRef.current.src = newSrc;
+        }
     });
 
     // --- PRELOADER ---
@@ -89,8 +96,10 @@ export default function SequenceScroll() {
             <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
                 <div className="absolute w-[600px] h-[600px] bg-blue-900/20 blur-[120px] rounded-full pointer-events-none" />
 
+                {/* 🟢 UBAHAN 4: Pasang REF disini & set default src manual */}
                 <img
-                    src={currentImg}
+                    ref={imgRef} // <--- KUNCI UTAMA
+                    src="/sequence/ezgif-frame-001.jpg" // Default awal
                     alt="iPhone Sequence"
                     loading="eager"
                     fetchPriority="high"
@@ -103,7 +112,6 @@ export default function SequenceScroll() {
 
                 <div className="relative z-10 w-full max-w-7xl px-6 h-full pointer-events-none flex flex-col justify-center">
 
-                    {/* JUDUL UTAMA */}
                     <motion.div style={{ opacity: t1Op, scale: t1Scale }} className="absolute inset-0 flex items-center justify-center">
                         <div className="text-center">
                             <h1 className="text-7xl md:text-9xl font-bold text-white tracking-tighter drop-shadow-2xl">iPhone 13</h1>
@@ -111,13 +119,11 @@ export default function SequenceScroll() {
                         </div>
                     </motion.div>
 
-                    {/* 🟢 PERBAIKAN: Hapus backdrop-blur, ganti jadi bg-black/80 agar ringan 🟢 */}
                     <motion.div style={{ opacity: t2Op, y: t2Y }} className="absolute left-6 md:left-20 top-1/2 -translate-y-1/2 max-w-md p-6 bg-black/80 rounded-3xl border border-white/10 shadow-2xl">
                         <h2 className="text-4xl font-bold text-blue-400 mb-2">Super Retina XDR</h2>
                         <p className="text-white text-lg">Layar OLED yang lebih terang, lebih tajam, dan hemat daya.</p>
                     </motion.div>
 
-                    {/* 🟢 PERBAIKAN: Hapus backdrop-blur, ganti jadi bg-black/80 agar ringan 🟢 */}
                     <motion.div style={{ opacity: t3Op, y: t3Y }} className="absolute right-6 md:right-20 top-1/2 -translate-y-1/2 max-w-md p-6 bg-black/80 rounded-3xl border border-white/10 text-right shadow-2xl">
                         <h2 className="text-4xl font-bold text-purple-400 mb-2">A15 Bionic</h2>
                         <p className="text-white text-lg">Chip smartphone paling ngebut di dunia.</p>
