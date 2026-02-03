@@ -17,7 +17,7 @@ export default function Home() {
                 <h2 className="text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600">
                     More Pro than Ever.
                 </h2>
-                <p className="text-zinc-500 mt-4 text-sm">Designed by Kamu di Surabaya.</p>
+                <p className="text-zinc-500 mt-4 text-sm">Designed by Ivan.</p>
             </footer>
         </main>
     );
