@@ -143,7 +143,9 @@ function SequenceScroll() {
                                         resolve();
                                     }
                                 })["SequenceScroll.useEffect.preloadImages"];
-                                img.onerror = resolve;
+                                img.onerror = ({
+                                    "SequenceScroll.useEffect.preloadImages": ()=>resolve()
+                                })["SequenceScroll.useEffect.preloadImages"];
                             }
                         }["SequenceScroll.useEffect.preloadImages"]);
                         promises.push(promise);

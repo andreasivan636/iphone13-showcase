@@ -2,9 +2,9 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useScroll, useTransform, useMotionValueEvent, motion } from 'framer-motion';
+// TAMBAHAN: Import useSpring
+import { useScroll, useTransform, useMotionValueEvent, useSpring, motion } from 'framer-motion';
 
-// PASTIKAN FRAME COUNT SESUAI (192)
 const FRAME_COUNT = 192;
 
 export default function SequenceScroll() {
@@ -18,11 +18,19 @@ export default function SequenceScroll() {
         offset: ["start start", "end end"]
     });
 
-    // --- 1. LOGIKA PUTARAN HP (KUNCI POSISI DEPAN) ---
-    // Animasi selesai di 90% scroll. Sisa 10% diam menghadap depan.
-    const currentIndex = useTransform(scrollYProgress, [0, 0.9], [1, FRAME_COUNT]);
+    // 🟢 RAHASIA "RINGAN" SEPERTI FORE: useSpring 🟢
+    // Ini membuat scroll tidak "kaget-kaget" tapi mengayun lembut.
+    const smoothProgress = useSpring(scrollYProgress, {
+        mass: 0.1,      // Makin kecil = makin ringan
+        stiffness: 100, // Kekuatan per
+        damping: 20,    // Peredam getaran (biar gak goyang berlebih)
+        restDelta: 0.001
+    });
 
-    // --- 2. ANIMASI POP-UP TEKS ---
+    // Hubungkan transform ke smoothProgress, bukan scrollYProgress langsung
+    const currentIndex = useTransform(smoothProgress, [0, 0.9], [1, FRAME_COUNT]);
+
+    // --- ANIMASI TEKS (Tetap pakai scroll asli biar responsif) ---
     const t1Op = useTransform(scrollYProgress, [0, 0.1, 0.15], [1, 1, 0]);
     const t1Scale = useTransform(scrollYProgress, [0, 0.15], [1, 0.8]);
 
@@ -35,13 +43,16 @@ export default function SequenceScroll() {
     const t4Op = useTransform(scrollYProgress, [0.85, 0.95], [0, 1]);
     const t4Scale = useTransform(scrollYProgress, [0.85, 0.95], [0.8, 1]);
 
-    // --- 3. EVENT SCROLL ---
+    // --- EVENT GANTI GAMBAR ---
     useMotionValueEvent(currentIndex, "change", (latest) => {
         const safeIndex = Math.max(1, Math.min(Math.floor(latest), FRAME_COUNT));
-        setCurrentImg(`/sequence/ezgif-frame-${safeIndex.toString().padStart(3, '0')}.jpg`);
+        // Kita panggil requestAnimationFrame biar browser gak stress
+        requestAnimationFrame(() => {
+            setCurrentImg(`/sequence/ezgif-frame-${safeIndex.toString().padStart(3, '0')}.jpg`);
+        });
     });
 
-    // --- 4. PRELOADER ---
+    // --- PRELOADER ---
     useEffect(() => {
         const preloadImages = async () => {
             let count = 0;
@@ -72,7 +83,6 @@ export default function SequenceScroll() {
     return (
         <div ref={containerRef} className="h-[500vh] bg-black relative">
 
-            {/* A. LOADING SCREEN */}
             {!isLoaded && (
                 <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black">
                     <div className="w-16 h-16 border-4 border-white/20 border-t-blue-500 rounded-full animate-spin mb-4"></div>
@@ -80,27 +90,24 @@ export default function SequenceScroll() {
                 </div>
             )}
 
-            {/* B. STICKY AREA */}
             <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
-
-                {/* GLOW EFFECT */}
                 <div className="absolute w-[600px] h-[600px] bg-blue-900/20 blur-[120px] rounded-full pointer-events-none" />
 
-                {/* C. GAMBAR SEQUENCE */}
+                {/* 🟢 UPDATE: OPTIMASI TAG IMG 🟢 */}
                 <img
                     src={currentImg}
                     alt="iPhone Sequence"
+                    loading="eager"       // Load prioritas
+                    fetchPriority="high"  // Prioritas tinggi
+                    decoding="sync"       // Decode sinkron
                     className="absolute inset-0 w-full h-full object-cover z-0"
+                    style={{ willChange: "contents" }} // Memberi tahu GPU untuk bersiap
                 />
 
-                {/* D. "LAKBAN" PENUTUP LOGO VEO (Baru!) */}
-                {/* Kotak hitam kecil di pojok kanan bawah untuk menutupi watermark */}
                 <div className="absolute bottom-0 right-0 w-24 h-12 bg-black z-20" />
 
-                {/* E. POP-UP TEXT OVERLAYS */}
                 <div className="relative z-10 w-full max-w-7xl px-6 h-full pointer-events-none flex flex-col justify-center">
 
-                    {/* Judul */}
                     <motion.div style={{ opacity: t1Op, scale: t1Scale }} className="absolute inset-0 flex items-center justify-center">
                         <div className="text-center">
                             <h1 className="text-7xl md:text-9xl font-bold text-white tracking-tighter drop-shadow-2xl">iPhone 13</h1>
@@ -108,19 +115,16 @@ export default function SequenceScroll() {
                         </div>
                     </motion.div>
 
-                    {/* Fitur Kiri */}
                     <motion.div style={{ opacity: t2Op, y: t2Y }} className="absolute left-6 md:left-20 top-1/2 -translate-y-1/2 max-w-md p-6 bg-black/40 backdrop-blur-lg rounded-3xl border border-white/10">
                         <h2 className="text-4xl font-bold text-blue-400 mb-2">Super Retina XDR</h2>
                         <p className="text-white text-lg">Layar OLED yang lebih terang, lebih tajam, dan hemat daya.</p>
                     </motion.div>
 
-                    {/* Fitur Kanan */}
                     <motion.div style={{ opacity: t3Op, y: t3Y }} className="absolute right-6 md:right-20 top-1/2 -translate-y-1/2 max-w-md p-6 bg-black/40 backdrop-blur-lg rounded-3xl border border-white/10 text-right">
                         <h2 className="text-4xl font-bold text-purple-400 mb-2">A15 Bionic</h2>
                         <p className="text-white text-lg">Chip smartphone paling ngebut di dunia.</p>
                     </motion.div>
 
-                    {/* Tombol Bawah */}
                     <motion.div style={{ opacity: t4Op, scale: t4Scale }} className="absolute bottom-24 left-0 right-0 flex justify-center pointer-events-auto">
                         <div className="text-center">
                             <h2 className="text-5xl font-bold text-white mb-6 drop-shadow-lg">Cinematic Mode.</h2>
